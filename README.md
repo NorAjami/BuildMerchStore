@@ -1,5 +1,4 @@
 
-```markdown
 # 🛍️ MerchStore – Clean Architecture Webshop
 
 > A modern merch web app built with ASP.NET Core and Clean Architecture. Designed for cloud deployment, testability, and scalable development.
