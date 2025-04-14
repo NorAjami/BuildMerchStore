@@ -1,4 +1,4 @@
-# 🛍️ BuildAmercheDemo
+# 🛍️ MerchStore
 
 A modern, clean architecture-based merchandise web application built with ASP.NET Core (.NET 9) and designed for cloud deployment.
 
