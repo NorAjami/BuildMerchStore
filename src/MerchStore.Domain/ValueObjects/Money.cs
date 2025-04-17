@@ -8,9 +8,13 @@ public record Money
     public Money(decimal amount, string currency)
     {
         if (amount < 0)
-            throw new ArgumentException("Amount cannot be negative");
-        if (string.IsNullOrWhiteSpace(currency) || currency.Length != 3)
-            throw new ArgumentException("Currency code must be 3 letters (ISO 4217)");
+            throw new ArgumentException("Amount cannot be negative", nameof(amount));
+
+        if (string.IsNullOrWhiteSpace(currency))
+            throw new ArgumentException("Currency cannot be empty", nameof(currency));
+
+        if (currency.Length != 3)
+            throw new ArgumentException("Currency code must be 3 letters (ISO 4217)", nameof(currency));
 
         Amount = amount;
         Currency = currency.ToUpper();

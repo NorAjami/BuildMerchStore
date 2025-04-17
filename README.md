@@ -9,12 +9,11 @@
 
 ```bash
 src/
-├── MerchStore.Domain          # DDD Entities, Value Objects, Interfaces
+├── MerchStore.Domain          # DDD Entities, Value Objects, Interfacesgit a
 ├── MerchStore.Application     # Business logic, Services, DTOs
 ├── MerchStore.Infrastructure  # Database, External Services, Repositories
 ├── MerchStore.WebUI           # ASP.NET Core MVC frontend
 ```
-
 ---
 
 ## ✅ Project Progress
