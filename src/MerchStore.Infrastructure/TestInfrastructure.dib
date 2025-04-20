@@ -1,0 +1,90 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp"},{"name":"fsharp","languageName":"F#","aliases":["f#","fs"]},{"name":"html","languageName":"HTML"},{"name":"http","languageName":"HTTP"},{"name":"javascript","languageName":"JavaScript","aliases":["js"]},{"name":"mermaid","languageName":"Mermaid"},{"name":"pwsh","languageName":"PowerShell","aliases":["powershell"]},{"name":"value"}]}}
+
+#!markdown
+
+# MerchStore Infrastructure Testing Notebook
+
+Här testar vi ProductRepository med en testdatabas i minnet.
+Vi ska skapa, läsa, uppdatera och ta bort produkter – och se direkt om det funkar!
+
+#!csharp
+
+#r "../MerchStore.Application/bin/Debug/net9.0/MerchStore.Application.dll"
+#r "../MerchStore.Domain/bin/Debug/net9.0/MerchStore.Domain.dll"
+#r "../MerchStore.Infrastructure/bin/Debug/net9.0/MerchStore.Infrastructure.dll"
+#r "nuget: Microsoft.EntityFrameworkCore.Relational, 9.0.4"
+
+
+#r "nuget: Microsoft.EntityFrameworkCore.InMemory, 9.0.4-preview.2.24128.4"
+#r "nuget: Microsoft.EntityFrameworkCore"
+#r "nuget: Microsoft.Extensions.Logging.Console"
+
+#!csharp
+
+using Microsoft.EntityFrameworkCore;
+using MerchStore.Infrastructure.Persistence;
+using MerchStore.Infrastructure.Persistence.Repositories;
+using MerchStore.Domain.Entities;
+using MerchStore.Domain.ValueObjects;
+
+// Skapa testdatabas i minnet
+var options = new DbContextOptionsBuilder<AppDbContext>()
+    .UseInMemoryDatabase("TestDb")
+    .Options;
+
+var context = new AppDbContext(options);
+var repository = new ProductRepository(context);
+
+Console.WriteLine("Allt är redo!");
+
+#!csharp
+
+var produkt = new Product(
+    "Test T-shirt",
+    "Vit t-shirt skapad i notebook",
+    new Uri("https://example.com/bild.jpg"),
+    Money.FromSEK(149.00m),
+    12);
+
+await repository.AddAsync(produkt);
+await context.SaveChangesAsync();
+Console.WriteLine("Produkt tillagd!");
+
+#!csharp
+
+var produkter = await repository.GetAllAsync();
+foreach (var p in produkter)
+{
+    Console.WriteLine($"{p.Name}, {p.Price}, {p.StockQuantity}");
+}
+
+#!csharp
+
+var produktAttUppdatera = (await repository.GetAllAsync()).First();
+produktAttUppdatera.UpdateStock(produktAttUppdatera.StockQuantity + 5);
+await repository.UpdateAsync(produktAttUppdatera);
+await context.SaveChangesAsync();
+Console.WriteLine("Uppdaterat!");
+
+#!csharp
+
+var alla = await repository.GetAllAsync();
+foreach (var p in alla)
+{
+    await repository.RemoveAsync(p);
+    await context.SaveChangesAsync();
+    Console.WriteLine($"Tog bort {p.Name}");
+}
+
+#!markdown
+
+## ✅ Vad jag har testat:
+
+- ✅ Skapat en produkt
+- ✅ Läste alla produkter
+- ✅ Uppdaterade en produkt
+- ✅ Tog bort produkter
+
+Detta bevisar att mitt ProductRepository fungerar, även utanför webbappen!
