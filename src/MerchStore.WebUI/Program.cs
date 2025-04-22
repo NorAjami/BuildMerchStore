@@ -12,7 +12,19 @@ builder.Services.AddApplication();
 // Add Infrastructure services - this includes DbContext, Repositories, etc.
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Add Swagger for API documentation
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "MerchStore API v1");
+});
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
