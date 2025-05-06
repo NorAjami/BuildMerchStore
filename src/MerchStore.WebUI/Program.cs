@@ -119,14 +119,29 @@ MerchStore.Infrastructure.DependencyInjection.AddInfrastructure(builder.Services
 // Konfigurera stöd för API-dokumentation
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddControllersWithViews();
-  /*  .AddJsonOptions(options =>
+// Update the JSON options configuration to use our custom policy
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy(); // för objekt
         options.JsonSerializerOptions.DictionaryKeyPolicy = new JsonSnakeCaseNamingPolicy();   // för dictionaries
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());           // gör enum till string istället för siffror
     });
-*/
+
+
+// Add this after other service registrations
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()  // Allow requests from any origin
+                   .AllowAnyHeader()  // Allow any headers
+                   .AllowAnyMethod(); // Allow any HTTP method
+        });
+});
+
+
 
 // Lägg till Swagger för API-dokumentation
 builder.Services.AddSwaggerGen(options =>
