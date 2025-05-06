@@ -1,6 +1,6 @@
 // Configuration
 const API_CONFIG = {
-    baseUrl: 'https://localhost:7188',  // Update with your API's URL
+    baseUrl: 'http://localhost:5262',  // Update with your API's URL
     endpoints: {
         products: '/api/basic/products'
     },
