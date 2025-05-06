@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Models;
 using MerchStore.WebUI.Authentication.ApiKey;
 using MerchStore.WebUI.Infrastructure;
 using System.Text.Json.Serialization; // För Json-konvertering
+using MerchStore.WebUI.Endpoints;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 
 
@@ -181,6 +183,12 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = ApiKeyAuthenticationDefaults.AuthenticationScheme
     });
 
+     // Configure operation IDs for minimal APIs to avoid conflicts
+    options.CustomOperationIds(apiDesc =>
+    {
+        return apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null;
+    });
+
     // 🔐 Applicera säkerhetsfilter för endpoints med [Authorize]
     options.OperationFilter<MerchStore.WebUI.Infrastructure.SecurityRequirementsOperationFilter>();
 
@@ -303,6 +311,9 @@ app.UseStaticFiles();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+app.MapMinimalProductEndpoints();
 
 // Starta applikationen
 app.Run();
