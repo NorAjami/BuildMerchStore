@@ -2,7 +2,7 @@ using System.Reflection;
 using MerchStore.Application;
 using MerchStore.Infrastructure;
 using MerchStore.Infrastructure.Persistence;
-//using MerchStore.WebUI.Services;
+using MerchStore.WebUI.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -106,10 +106,10 @@ builder.Services.AddSession(options =>
 builder.Services.AddHttpContextAccessor();
 
 // Registrera kundvagnstjänsten för dependency injection
-//builder.Services.AddScoped<CartSessionService>();
+builder.Services.AddScoped<CartSessionService>();
 
 // Registrera autentiseringstjänsten för dependency injection
-//builder.Services.AddScoped<AuthService>();
+// builder.Services.AddScoped<AuthService>();
 
 // Lägg till Application-lagrets tjänster (från Application-projektet)
 builder.Services.AddApplication();
@@ -198,6 +198,11 @@ builder.Services.AddSwaggerGen(options =>
 // Program.cs - Lägg till loggning för anslutningssträngen
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"Använder anslutningssträng: {connectionString}");
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
+builder.Services.AddScoped<CartSessionService>();
+
 
 //builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -308,12 +313,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseStaticFiles();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-app.MapMinimalProductEndpoints();
+app.MapMinimalProductEndpoints(); //Registrerar dina nya Minimal API endpoints
 
 // Starta applikationen
 app.Run();

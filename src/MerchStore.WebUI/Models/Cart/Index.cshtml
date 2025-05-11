@@ -1,0 +1,74 @@
+@using MerchStore.WebUI.Models
+
+@model MerchStore.WebUI.Models.Cart.CartViewModel
+
+<h2>Your Shopping Cart 🛒</h2>
+
+@if (Model == null || Model.Items == null || !Model.Items.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price (SEK)</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("F2")</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Price * item.Quantity)</td>
+                    <td>
+                        <form asp-action="Remove" method="post">
+                            <input type="hidden" name="id" value="@item.ProductId" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>
+        Total: 
+        @Model.Items.Sum(item => item.Price * item.Quantity).ToString("F2") SEK
+    </h4>
+}
+
+    <!-- ✅ Höger: fraktformulär -->
+    <div style="flex: 1;">
+        <h3>Fraktuppgifter</h3>
+        <form method="post" asp-action="SparaFrakt">
+            <label>Förnamn</label>
+            <input name="Förnamn" value="@Model.Shipping.Förnamn" required />
+
+            <label>Efternamn</label>
+            <input name="Efternamn" value="@Model.Shipping.Efternamn" required />
+
+            <label>Gatuadress</label>
+            <input name="Gatuadress" value="@Model.Shipping.Gatuadress" required />
+
+            <label>Postnummer</label>
+            <input name="Postnummer" value="@Model.Shipping.Postnummer" required />
+
+            <label>Stad</label>
+            <input name="Stad" value="@Model.Shipping.Stad" required />
+
+            <label>Telefonnummer</label>
+            <input name="Telefonnummer" value="@Model.Shipping.Telefonnummer" required />
+
+            <button type="submit">Spara fraktinformation</button>
+        </form>
+    </div>
+
+</div>

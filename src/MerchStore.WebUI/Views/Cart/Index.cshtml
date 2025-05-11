@@ -1,0 +1,60 @@
+
+@model List<ShoppingCartItem>
+
+<h2>Your Shopping Cart 🛒</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price (SEK)</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("F2")</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Price * item.Quantity)</td>
+                    <td>
+                        <form asp-action="Remove" method="post">
+                            <input type="hidden" name="id" value="@item.ProductId" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="text-end mt-4">
+        <a asp-action="Checkout" class="btn btn-success">Gå vidare till Kassan</a>
+    </div>
+
+    @foreach (var item in Model)
+    {
+        <form asp-action="UpdateQuantity" method="post" class="d-flex align-items-center">
+            <input type="hidden" name="id" value="@item.ProductId" />
+            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control me-2" style="width:80px;" />
+            <button type="submit" class="btn btn-sm btn-outline-primary">Uppdatera</button>
+        </form>
+    }
+
+    <h4>
+        Total: 
+        @Model.Sum(item => item.Price * item.Quantity).ToString("F2") SEK
+    </h4>
+}
+
