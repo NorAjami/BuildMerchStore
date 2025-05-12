@@ -66,15 +66,6 @@ else
 
             <label>Telefonnummer</label>
             <input name="Telefonnummer" value="@Model.Shipping.Telefonnummer" required />
-            <label>E-post</label>
-            <label>Land</label>
-            <input name="Land" value="@Model.Shipping.Land" required />
-            <input name="Email" value="@Model.Shipping.Email" required />
-            <label>Fraktmetod</label>
-            <select name="Fraktmetod" required>
-                <option value="Standard" @(Model.Shipping.Fraktmetod == "Standard" ? "selected" : "")>Standard</option>
-                <option value="Express" @(Model.Shipping.Fraktmetod == "Express" ? "selected" : "")>Express</option>
-
 
             <button type="submit">Spara fraktinformation</button>
         </form>
