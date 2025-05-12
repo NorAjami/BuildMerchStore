@@ -4,6 +4,7 @@ using MerchStore.WebUI.Models;
 using MerchStore.WebUI.Services;
 using System; 
 using MerchStore.WebUI.Models.Catalog;
+using MerchStore.WebUI.Models.Cart;
 
 
 namespace MerchStore.WebUI.Controllers
@@ -26,6 +27,23 @@ namespace MerchStore.WebUI.Controllers
             var cart = _cartService.GetCart();
             return View(cart); // Detta ska visa Cart/Index.cshtml
         }
+
+        [HttpPost]
+        public IActionResult Checkout(CartViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Om formuläret inte är korrekt ifyllt – visa checkout igen
+                return View(model);
+            }
+
+            // Här kan du i framtiden spara shipping info eller skicka till betaltjänst
+
+            // För nu: visa en bekräftelse
+            TempData["SuccessMessage"] = "Tack för din beställning! Vi skickar ett bekräftelsemail snart.";
+            return RedirectToAction("Index", "Home");
+        }
+
 
         // Lägger till en produkt i kundvagnen (skickas från "Lägg till" knapp)
         [HttpPost]

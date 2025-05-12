@@ -1,50 +1,56 @@
 @model MerchStore.WebUI.Models.Cart.CartViewModel
 
-@{
-    ViewData["Title"] = "Checkout";
-}
+<h2>🧾 Kassa</h2>
 
-<h2>Kassa</h2>
+<div class="row">
+    <!-- Shipping Info (vänster sida) -->
+    <div class="col-md-6">
+        <h4>📦 Leveransuppgifter</h4>
+        <form asp-action="Checkout" method="post">
+            <div class="mb-2">
+                <label for="ShippingInfo_Förnamn">Förnamn</label>
+                <input type="text" class="form-control" id="ShippingInfo_Förnamn" name="ShippingInfo.Förnamn" required />
+            </div>
+            <div class="mb-2">
+                <label for="ShippingInfo_Efternamn">Efternamn</label>
+                <input type="text" class="form-control" id="ShippingInfo_Efternamn" name="ShippingInfo.Efternamn" required />
+            </div>
+            <div class="mb-2">
+                <label for="ShippingInfo_Gatuadress">Gatuadress</label>
+                <input type="text" class="form-control" id="ShippingInfo_Gatuadress" name="ShippingInfo.Gatuadress" required />
+            </div>
+            <div class="mb-2">
+                <label for="ShippingInfo_Postnummer">Postnummer</label>
+                <input type="text" class="form-control" id="ShippingInfo_Postnummer" name="ShippingInfo.Postnummer" required />
+            </div>
+            <div class="mb-2">
+                <label for="ShippingInfo_Stad">Stad</label>
+                <input type="text" class="form-control" id="ShippingInfo_Stad" name="ShippingInfo.Stad" required />
+            </div>
+            <div class="mb-2">
+                <label for="ShippingInfo_Land">Land</label>
+                <input type="text" class="form-control" id="ShippingInfo_Land" name="ShippingInfo.Land" required />
+            </div>
+            <div class="mb-2">
+                <label for="ShippingInfo_Email">E-postadress</label>
+                <input type="email" class="form-control" id="ShippingInfo_Email" name="ShippingInfo.Email" required />
+            </div>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+            <!-- Vi lägger till betalning sen! -->
+            <button type="submit" class="btn btn-primary mt-3">Fortsätt till betalning</button>
+        </form>
     </div>
-}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Produkt</th>
-            <th>Antal</th>
-            <th>Pris</th>
-            <th>Totalt</th>
-        </tr>
-    </thead>
-    <tbody>
+    <!-- Order Summary (höger sida) -->
+    <div class="col-md-6">
+        <h4>🛒 Din order</h4>
         @foreach (var item in Model.Items)
         {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Quantity</td>
-                <td>@item.Price.ToString("c")</td>
-                <td>@(item.Quantity * item.Price).ToString("c")</td>
-            </tr>
+            <div>
+                <strong>@item.Name</strong> – @item.Quantity st – @item.Price.ToString("C")
+            </div>
         }
-    </tbody>
-</table>
-
-<div class="text-end">
-    <h4>Totalbelopp: @Model.TotalPrice.ToString("c")</h4>
-</div>
-
-<hr />
-
-<div class="text-center">
-    <p>Vill du <a asp-controller="Account" asp-action="Login">logga in</a> för att spara din order? Det är valfritt!</p>
-</div>
-
-<div class="text-center mt-3">
-    <button class="btn btn-primary">Slutför Köp som Gäst</button>
+        <hr />
+        <h5>Totalt: @Model.Items.Sum(i => i.Price * i.Quantity).ToString("C")</h5>
+    </div>
 </div>

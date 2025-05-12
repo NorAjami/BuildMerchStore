@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using MerchStore.WebUI.Models.Catalog;
+
 
 namespace MerchStore.WebUI.Models.Cart;
 
